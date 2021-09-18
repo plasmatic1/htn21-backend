@@ -76,6 +76,8 @@ def get(sid, uid):
 
     if len(cons[uid].sids) == 2:
         cons[uid].ready = True
+        for player_sid in cons[uid].sids:
+            sio.emit('start', room=player_sid)
 
     logging.info(f'User {sid} requested game {uid}, game now has users {cons[uid].sids}, ready state: {cons[uid].ready}')
 
@@ -89,6 +91,10 @@ def move(sid, x, y):
         return
 
     assert game_uid[sid] in cons
+
+    if not cons[game_uid[sid]].ready:
+        err(sid, f'Game {game_uid[sid]} not ready yet')
+        return
 
     logging.info(f'User {sid} sent move({x}, {y}) to game {game_uid[sid]}')
 
