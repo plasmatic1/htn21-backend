@@ -52,6 +52,8 @@ def disconnect(sid):
 def create(sid):
     gid = str(uuid.uuid4())
 
+    logging.info('eventJSDF OIJSDOFIJSOIFJSIOFJSOFJSDFIODFJ')
+
     assert gid not in cons
     cons[gid] = Game([], util.generate_map(GAME_SIZE), False)
 
