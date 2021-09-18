@@ -7,7 +7,7 @@ import collections
 
 import util
 
-from typing import Dict
+from typing import dict
 
 DEBUG = True
 LOG_FORMAT = '[%(asctime)s/%(name)s] %(levelname)s %(message)s'
@@ -28,8 +28,9 @@ sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files=STATIC_FILES)
 
 # Game globals
-Game = collections.namedtuple('Game', 'sids grid')
-cons : dict[str, Game] = {}
+Game = collections.namedtuple('Game', 'sids grid ready')
+cons: dict[str, Game] = {}
+game_uid: dict[str, str] = {}
 
 
 @sio.event
@@ -47,7 +48,7 @@ def create(sid):
     gid = str(uuid.uuid4())
 
     assert gid not in cons
-    cons[gid] = Game([], util.generate_map(GAME_SIZE))
+    cons[gid] = Game([], util.generate_map(GAME_SIZE), False)
 
     return gid
 
@@ -58,12 +59,21 @@ def get(sid, uid):
         sio.emit('error', f'Game {uid} does not exist', room=sid)
         return
 
-    game = cons[uid]
-
-    if len(game.sids) >= 2:
+    if len(cons[uid].sids) >= 2:
         sio.emit('error', f'Game {uid} already full', room=sid)
         return
+
+    cons[uid].sids.append(sid)
+    game_uid[sid] = uid
+
+    if len(cons[uid].sids) == 2:
+        cons[uid].ready = True
+
+    return cons[uid].grid
 
 
 @sio.event
 def move(sid, x, y):
+    if sid not in game_uid:
+        sio.emit('error', f'User {sid} not in game')
+        return
