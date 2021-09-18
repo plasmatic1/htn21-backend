@@ -40,12 +40,12 @@ def err(sid, msg):
 
 @sio.event
 def connect(sid, environ):
-    logging.info('Connection:', sid)
+    logging.info(f'Connection: {sid}')
 
 
 @sio.event
-def disconnect(sid, environ):
-    logging.info('Disconnection:', sid)
+def disconnect(sid):
+    logging.info(f'Disconnection: {sid}')
 
 
 @sio.event
@@ -55,7 +55,7 @@ def create(sid):
     assert gid not in cons
     cons[gid] = Game([], util.generate_map(GAME_SIZE), False)
 
-    logging.info(f'User {sid} requests new game {uuid}')
+    logging.info(f'User {sid} requests new game {gid}')
     logging.debug(f'Grid: {cons[gid].grid}')
 
     return gid
