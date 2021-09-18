@@ -1,3 +1,15 @@
+aiohttp==3.7.4.post0
+async-timeout==3.0.1
+attrs==21.2.0
 bidict==0.21.3
+chardet==4.0.0
+colorama==0.4.4
+coloredlogs==15.0.1
+gunicorn==20.1.0
+humanfriendly==10.0
+idna==3.2
+multidict==5.1.0
 python-engineio==4.2.1
 python-socketio==5.4.0
+typing-extensions==3.10.0.2
+yarl==1.6.3
