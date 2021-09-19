@@ -131,7 +131,7 @@ async def move(sid, x, y):
     cons[game_uid[sid]].last_action = datetime.now()
     for player_sid in cons[game_uid[sid]].sids:
         if player_sid != sid:
-            await sio.emit('move', (x, y), to=player_sid)
+            await sio.emit('move', [x, y], to=player_sid)
 
 
 ### DISCONNECTING THREAD ###
